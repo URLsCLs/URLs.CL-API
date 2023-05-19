@@ -10,7 +10,8 @@ app.use(express.urlencoded());
 
 
 const auther = async (req, res, next) => {
-  if (req.path == '/') {
+  // if method is get next()
+  if (req.method == 'GET') {
     next();
     return;
   }
