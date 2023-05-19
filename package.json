@@ -9,7 +9,7 @@
     "body-parser": "^1.20.2",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "express-file-routing": "^2.1.2",
+    "express-file-routing": "^2.1.3",
     "mysql2": "^3.3.1",
     "nanoid": "^3.0.0"
   }
