@@ -1,17 +1,16 @@
 {
-  "name": "API.URLs.CL",
+  "name": "URls.CL-API",
   "version": "1.0.0",
-  "description": "the API behind the URLs url shortner.",
   "main": "index.js",
-  "author": "Adam Post",
+  "repository": "git@github.com:URLsCLs/URls.CL-API.git",
+  "author": "Adam Post <adamrpostjr@gmail.com>",
   "license": "MIT",
-  "private": false,
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "monk": "^7.3.4",
-    "nanoid": "^3.1.30"
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-file-routing": "^2.1.2",
+    "mysql2": "^3.3.1",
+    "nanoid": "^3.0.0"
   }
 }
