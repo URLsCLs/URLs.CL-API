@@ -15,7 +15,7 @@ const auther = async (req, res, next) => {
   }
 
   let token = (await query('select * from access'))[0];
-  token = token.find((t) => t.token == req.headers['x-api-key']);
+  token = token.find((t) => t.token == req.headers['appkey']);
   if (!token) {
     res.status(401).json({ message: 'Unauthorized' });
     return;
