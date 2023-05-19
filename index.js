@@ -1,7 +1,8 @@
 require('dotenv').config();
-const {query} = require('./modules/db');
+const { query } = require('./modules/db');
 var bodyParser = require('body-parser');
 const express = require('express');
+const { nanoid } = require('nanoid');
 const app = express();
 
 app.use(bodyParser.json());
@@ -40,18 +41,32 @@ app.get('/slug/:slug', async (req, res) => {
 })
 
 app.post('/slug', async (req, res) => {
-  const { slug, url } = req.body;
+  let url = req.body.url;
+
+  if (url.toLowerCase().includes('urls.cl')) {
+    return Promise.reject('Are you kidding me?');
+  }
+
+  let slug = nanoid(Math.floor(Math.random() * (7 - 3) + 3));
   try {
     let shrt = await query('SELECT * FROM slugs WHERE slug = ?', [slug])
     if (shrt.length != 0) {
-      res.status(409).json({ error: 'Slug already exists' })
-    } else {
-      let shrt = await query('INSERT INTO slugs (slug, url) VALUES (?, ?)', [slug, url])
-      res.status(200).json({ slug: slug, url: url })
+      slug = nanoid(Math.floor(Math.random() * (7 - 3) + 3));
     }
   } catch (error) {
-    res.status(409).json({ error: 'Slug already exists' })
+    res.status(500).json({ error: 'Something went wrong' })
+    console.log(error)
   }
+
+  try {
+    let shrt = await query('INSERT INTO slugs (slug, url) VALUES (?, ?)', [slug, url])
+    res.status(200).json({ slug: slug, url: url })
+    return;
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' })
+    console.log(error)
+  }
+  res.status(500).json({ error: 'Something went wrong' })
 })
 
 app.get('/', async (req, res) => {
