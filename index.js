@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require('./modules/db');
+const {query} = require('./modules/db');
 var bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
@@ -9,7 +9,12 @@ app.use(express.urlencoded());
 
 
 const auther = async (req, res, next) => {
-  let token = (await db.query('select * from access'))[0];
+  if (req.path == '/') {
+    next();
+    return;
+  }
+
+  let token = (await query('select * from access'))[0];
   token = token.find((t) => t.token == req.headers['x-api-key']);
   if (!token) {
     res.status(401).json({ message: 'Unauthorized' });
@@ -23,7 +28,7 @@ app.use(auther);
 app.get('/slug/:slug', async (req, res) => {
   const { slug } = req.params;
   try {
-    let shrt = await db.query('SELECT * FROM slugs WHERE slug = ?', [slug])
+    let shrt = await query('SELECT * FROM slugs WHERE slug = ?', [slug])
     if (shrt.length != 0) {
       res.status(200).json(shrt[0])
     } else {
@@ -37,11 +42,11 @@ app.get('/slug/:slug', async (req, res) => {
 app.post('/slug', async (req, res) => {
   const { slug, url } = req.body;
   try {
-    let shrt = await db.query('SELECT * FROM slugs WHERE slug = ?', [slug])
+    let shrt = await query('SELECT * FROM slugs WHERE slug = ?', [slug])
     if (shrt.length != 0) {
       res.status(409).json({ error: 'Slug already exists' })
     } else {
-      let shrt = await db.query('INSERT INTO slugs (slug, url) VALUES (?, ?)', [slug, url])
+      let shrt = await query('INSERT INTO slugs (slug, url) VALUES (?, ?)', [slug, url])
       res.status(200).json({ slug: slug, url: url })
     }
   } catch (error) {
